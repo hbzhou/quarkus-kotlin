@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: quarkus-department
+  namespace: quarkus-department
+spec:
+  selector:
+    app: quarkus-department
+  ports:
+    - port: 8089
+  type: NodePort

@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: quarkus-department
+  name: quarkus-department
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: quarkus-department
+  template:
+    metadata:
+      labels:
+        app: quarkus-department
+    spec:
+      containers:
+        - name: quarkus-department
+          image: quarkus/quarkus-department-system
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8089
+              protocol: TCP
+
