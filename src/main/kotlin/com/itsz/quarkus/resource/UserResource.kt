@@ -67,7 +67,7 @@ class UserResource(val userService: UserService) {
 
     @GET
     @Path("/users/export/csv")
-    @Produces("application/ms-excel", "application/vnd.ms-excel")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
     fun download(): Response {
         val byteStream = userService.exportCSV()
         return Response.ok(byteStream).header("content-disposition",
