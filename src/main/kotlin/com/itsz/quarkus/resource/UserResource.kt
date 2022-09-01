@@ -2,9 +2,7 @@ package com.itsz.quarkus.resource
 
 import com.itsz.quarkus.model.User
 import com.itsz.quarkus.service.UserService
-import java.io.BufferedInputStream
-import java.io.FileInputStream
-import java.io.InputStream
+import io.smallrye.mutiny.coroutines.awaitSuspending
 import javax.enterprise.context.ApplicationScoped
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
@@ -17,72 +15,41 @@ class UserResource(val userService: UserService) {
     @GET
     @Path("/users")
     @Produces(MediaType.APPLICATION_JSON)
-    fun findAll(): Response {
-        return Response.ok(userService.findAll()).build()
+    suspend fun findAll(): Response {
+        val userList: List<User> = userService.findAll().awaitSuspending()
+        return Response.ok(userList).build()
+    }
+
+
+    @GET
+    @Path("/users/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    suspend fun findById(@PathParam("id") id: String): Response {
+        val user: User = userService.findById(id).awaitSuspending()
+        return Response.ok(user).build()
     }
 
     @POST
     @Path("/users")
     @Produces(MediaType.APPLICATION_JSON)
-    fun save(user: UserDto): Response {
-        val userEntity = User(
-            username = user.username,
-            password = user.password,
-            age = user.age,
-            sex = user.sex,
-            address = user.address
-        )
-        userService.save(userEntity)
-        return Response.accepted().build()
-    }
-
-    @GET
-    @Path("/users/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    fun findById(@PathParam("id") id: Long): Response {
-        return Response.ok(userService.findById(id)).build()
+    suspend fun saveUser(user: User): Response {
+        val persistedUser = userService.save(user).awaitSuspending()
+        return Response.ok(persistedUser).build()
     }
 
     @PUT
     @Path("/users")
     @Produces(MediaType.APPLICATION_JSON)
-    fun update(userDto: UserDto): Response {
-        val user = userService.findById(userDto.id)
-        user.username = userDto.username
-        user.password = userDto.password
-        user.sex = userDto.sex
-        user.age = userDto.age
-        user.address = userDto.address
-        userService.save(user)
-        return Response.accepted().build()
-    }
-
-    @DELETE
-    @Path("/users/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    fun deleteUserById(id: Long): Response {
-        userService.deleteById(id)
-        return Response.ok().build()
+    suspend fun updateUser(user: User): Response {
+        val updatedUser = userService.update(user).awaitSuspending()
+        return Response.ok(updatedUser).build()
     }
 
     @GET
     @Path("/users/export/csv")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    fun download(): Response {
-        val byteStream = userService.exportCSV()
-        return Response.ok(byteStream).header("content-disposition",
-            "attachment; filename = users.csv").build();
+    suspend fun export(@QueryParam("fileName") fileName: String): Response {
+        val inputStream = userService.export()
+        return Response.ok(inputStream).header("content-disposition", "attachment; filename = $fileName").build()
     }
-
 }
-
-data class UserDto(
-
-    val id: Long,
-    val username: String,
-    val password: String,
-    val age: Int,
-    val sex: Int,
-    val address: String,
-
-    )

@@ -1,44 +1,28 @@
 package com.itsz.quarkus.model
 
-import org.hibernate.Hibernate
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
+import io.quarkus.mongodb.panache.common.MongoEntity
+import org.bson.codecs.pojo.annotations.BsonId
+import org.bson.types.ObjectId
 
 
-@Entity
-data class User(
+@MongoEntity(collection = "user")
+ data class User constructor(
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    var id: Long = 0L,
+    @BsonId
+    var id: ObjectId?=null,
 
-    var username: String,
+    var username: String?=null,
 
-    var password: String,
+    var password: String?=null,
 
-    var age: Int,
+    var age: Int=0,
 
-    var address: String?,
+    var address: String?=null,
 
-    var sex: Int
-) {
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
-        other as User
+    var sex: Int = 0
+)
 
-        return id == other.id
-    }
 
-    override fun hashCode(): Int = javaClass.hashCode()
-
-    @Override
-    override fun toString(): String {
-        return this::class.simpleName + "(id = $id , username = $username , password = $password , age = $age , address = $address , sex = $sex )"
-    }
-}
 
 
 

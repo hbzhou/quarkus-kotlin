@@ -2,50 +2,45 @@ package com.itsz.quarkus.service
 
 import com.itsz.quarkus.model.User
 import com.itsz.quarkus.repository.UserRepository
+import io.smallrye.mutiny.Uni
+import io.smallrye.mutiny.coroutines.awaitSuspending
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVPrinter
+import org.bson.types.ObjectId
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
-import java.io.IOException
 import java.io.PrintWriter
 import javax.enterprise.context.ApplicationScoped
-import javax.transaction.Transactional
 
 
 @ApplicationScoped
 class UserService(val userRepository: UserRepository) {
 
+    fun findAll(): Uni<List<User>> = userRepository.findAll().list()
+    fun findById(id: String): Uni<User> = userRepository.findById(ObjectId(id))
+    fun save(user: User): Uni<User> = userRepository.persist(user)
+    fun update(user: User): Uni<User> = userRepository.update(user)
 
-    fun findAll(): List<User> = userRepository.findAll().list()
-
-    @Transactional
-    fun save(user: User) = userRepository.persist(user)
-
-    fun findById(id: Long): User = userRepository.findById(id)
-
-    @Transactional
-    fun deleteById(id: Long) {
-        userRepository.deleteById(id)
-    }
-
-    fun exportCSV(): ByteArrayInputStream {
-        val format: CSVFormat = CSVFormat.DEFAULT.withHeader("Name", "Password", "Address")
-        val users = userRepository.findAll().list<User>()
-        try {
-            ByteArrayOutputStream().use { out ->
-                CSVPrinter(PrintWriter(out), format).use { printer ->
-                    for (user in users) {
-                        val data: List<String?> = listOf(user.username, user.password, user.address)
-                        printer.printRecord(data)
-                    }
-                    printer.flush()
+    suspend fun export(): ByteArrayInputStream {
+        val format: CSVFormat = CSVFormat.DEFAULT.builder().setHeader("USERNAME", "PASSWORD", "ADDRESS", "SEX", "AGE", "ID").build()
+        val users = userRepository.findAll().list<User>().awaitSuspending()
+        ByteArrayOutputStream().use { out ->
+            CSVPrinter(PrintWriter(out), format).use { printer ->
+                users.forEach { user ->
+                    printer.printRecord(
+                        listOf(
+                            user.username,
+                            user.password,
+                            user.address,
+                            user.sex,
+                            user.age,
+                            user.id
+                        )
+                    )
                 }
-                return ByteArrayInputStream(out.toByteArray())
+                printer.flush()
             }
-        } catch (e: IOException) {
-            throw RuntimeException(
-                "fail to import data to CSV file: " + e.message
-            )
+            return ByteArrayInputStream(out.toByteArray())
         }
     }
 
