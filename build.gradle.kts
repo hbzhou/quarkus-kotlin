@@ -30,7 +30,7 @@ dependencies {
     implementation("io.smallrye.reactive:mutiny-kotlin:1.7.0")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.apache.commons:commons-csv:1.9.0")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.3")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.4")
     testImplementation("io.quarkus:quarkus-junit5")
     testImplementation("io.rest-assured:rest-assured")
     testImplementation("io.kotest:kotest-assertions-core:5.4.2")

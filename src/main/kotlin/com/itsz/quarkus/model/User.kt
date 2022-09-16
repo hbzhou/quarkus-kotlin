@@ -6,7 +6,7 @@ import org.bson.types.ObjectId
 
 
 @MongoEntity(collection = "user")
- data class User constructor(
+ data class User (
 
     @BsonId
     var id: ObjectId?=null,

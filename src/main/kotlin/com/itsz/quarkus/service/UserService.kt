@@ -26,18 +26,7 @@ class UserService(val userRepository: UserRepository) {
         val users = userRepository.findAll().list<User>().awaitSuspending()
         ByteArrayOutputStream().use { out ->
             CSVPrinter(PrintWriter(out), format).use { printer ->
-                users.forEach { user ->
-                    printer.printRecord(
-                        listOf(
-                            user.username,
-                            user.password,
-                            user.address,
-                            user.sex,
-                            user.age,
-                            user.id
-                        )
-                    )
-                }
+                printer.printRecords( users.map { listOf(it.username, it.password, it.address, it.sex, it.age, it.id) })
                 printer.flush()
             }
             return ByteArrayInputStream(out.toByteArray())
