@@ -19,6 +19,9 @@ val quarkusPlatformArtifactId: String by project
 val quarkusPlatformVersion: String by project
 
 dependencies {
+    implementation("io.quarkus:quarkus-rest-client")
+    implementation("io.quarkus:quarkus-rest-client-jackson")
+    implementation("io.quarkus:quarkus-vertx")
     implementation(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
     implementation("io.quarkus:quarkus-hibernate-reactive-rest-data-panache")
     implementation("io.quarkus:quarkus-mongodb-rest-data-panache")
@@ -31,11 +34,12 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.apache.commons:commons-csv:1.9.0")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.4")
+    implementation("io.quarkus:quarkus-micrometer-registry-prometheus")
+//    implementation("org.jobrunr:quarkus-jobrunr:5.1.7")
     testImplementation("io.quarkus:quarkus-junit5")
     testImplementation("io.rest-assured:rest-assured")
     testImplementation("io.kotest:kotest-assertions-core:5.4.2")
     testImplementation("io.mockk:mockk:1.12.7")
-
 
 }
 
