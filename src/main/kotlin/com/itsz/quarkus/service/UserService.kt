@@ -17,7 +17,10 @@ import javax.enterprise.context.ApplicationScoped
 class UserService(val userRepository: UserRepository) {
 
     fun findAll(): Uni<List<User>> = userRepository.findAll().list()
-    fun findById(id: String): Uni<User> = userRepository.findById(ObjectId(id))
+    fun findById(id: String): Uni<User> {
+        val objectId = ObjectId(id)
+        return  userRepository.findById(objectId)
+    }
     fun save(user: User): Uni<User> {
         return userRepository.persist(user)
     }

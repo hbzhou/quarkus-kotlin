@@ -39,9 +39,10 @@ class UserResource(
     @Path("/users")
     @Produces(MediaType.APPLICATION_JSON)
     suspend fun saveUser(user: User): Response {
-        val persistedUser = userService.save(user).awaitSuspending()
-        Log.info("Omit an event with address USER_CREATED")
-        bus.send("USER_CREATED", persistedUser)
+        val persistedUser = userService.save(user).awaitSuspending().apply {
+            Log.info("Omit an event with address USER_CREATED")
+            bus.send("USER_CREATED", this)
+        }
         return Response.ok(persistedUser).build()
     }
 
