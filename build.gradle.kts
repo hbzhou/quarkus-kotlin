@@ -27,6 +27,8 @@ dependencies {
     implementation(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
     implementation("io.quarkus:quarkus-hibernate-reactive-rest-data-panache")
     implementation("io.quarkus:quarkus-mongodb-rest-data-panache")
+    implementation("io.quarkus:quarkus-liquibase-mongodb")
+    implementation("io.quarkus:quarkus-mongodb-client")
     implementation("io.quarkus:quarkus-resteasy-reactive")
     implementation("io.quarkus:quarkus-resteasy-reactive-jackson")
     implementation("io.quarkus:quarkus-smallrye-openapi")
