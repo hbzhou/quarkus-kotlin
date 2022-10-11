@@ -58,7 +58,7 @@ class UserResource(
     @Path("/users/export/csv")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     suspend fun export(@QueryParam("fileName") fileName: String): Response {
-        val inputStream = userService.export()
+        val inputStream = userService.export().awaitSuspending()
         return Response.ok(inputStream).header("content-disposition", "attachment; filename = $fileName").build()
     }
 }

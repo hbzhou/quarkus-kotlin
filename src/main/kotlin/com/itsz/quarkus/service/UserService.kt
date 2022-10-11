@@ -19,25 +19,34 @@ class UserService(val userRepository: UserRepository) {
     fun findAll(): Uni<List<User>> = userRepository.findAll().list()
     fun findById(id: String): Uni<User> {
         val objectId = ObjectId(id)
-        return  userRepository.findById(objectId)
+        return userRepository.findById(objectId)
     }
+
     fun save(user: User): Uni<User> {
         return userRepository.persist(user)
     }
 
     fun update(user: User): Uni<User> = userRepository.update(user)
 
-    suspend fun export(): ByteArrayInputStream {
-        val format: CSVFormat =
-            CSVFormat.DEFAULT.builder().setHeader("USERNAME", "PASSWORD", "ADDRESS", "SEX", "AGE", "ID").build()
-        val users = userRepository.findAll().list<User>().awaitSuspending()
-        ByteArrayOutputStream().use { out ->
-            CSVPrinter(PrintWriter(out), format).use { printer ->
-                printer.printRecords(users.map { listOf(it.username, it.password, it.address, it.sex, it.age, it.id) })
-                printer.flush()
+    fun export(): Uni<ByteArrayInputStream> {
+        val format: CSVFormat = CSVFormat.DEFAULT.builder().setHeader("USERNAME", "PASSWORD", "ADDRESS", "SEX", "AGE", "ID").build()
+        return userRepository.findAll().list<User>().map { users ->
+            ByteArrayOutputStream().use { out ->
+                CSVPrinter(PrintWriter(out), format).use { printer ->
+                    printer.printRecords(users.map {
+                        listOf(
+                            it.username,
+                            it.password,
+                            it.address,
+                            it.sex,
+                            it.age,
+                            it.id
+                        )
+                    })
+                    printer.flush()
+                }
+                ByteArrayInputStream(out.toByteArray())
             }
-            return ByteArrayInputStream(out.toByteArray())
         }
     }
-
 }
