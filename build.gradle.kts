@@ -5,7 +5,7 @@ plugins {
 
     id("io.quarkus")
     id("org.jetbrains.kotlin.plugin.noarg") version "1.4.10"
-
+    id("org.liquibase.gradle") version "2.0.4"
 
 }
 
@@ -39,11 +39,13 @@ dependencies {
     implementation("org.apache.commons:commons-csv:1.9.0")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.4")
     implementation("io.quarkus:quarkus-micrometer-registry-prometheus")
-//    implementation("org.jobrunr:quarkus-jobrunr:5.1.7")
     testImplementation("io.quarkus:quarkus-junit5")
     testImplementation("io.rest-assured:rest-assured")
-    testImplementation("io.kotest:kotest-assertions-core:5.4.2")
-    testImplementation("io.mockk:mockk:1.12.7")
+    testImplementation("io.kotest:kotest-assertions-core:5.5.0")
+    testImplementation("io.mockk:mockk:1.13.2")
+    liquibaseRuntime("org.liquibase:liquibase-core:4.16.1")
+    liquibaseRuntime("org.liquibase.ext:liquibase-mongodb:4.16.1")
+
 
 }
 
@@ -65,4 +67,35 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions.jvmTarget = JavaVersion.VERSION_17.toString()
     kotlinOptions.javaParameters = true
 }
+
+liquibase {
+    activities.register("main") {
+        this.arguments = mapOf(
+            "logLevel" to "info",
+            "changeLogFile" to "src/main/resources/db/changeLog.xml",
+            "url" to "mongodb://localhost:27017/users",
+            "driver" to "liquibase.ext.mongodb.database.MongoClientDriver"
+        )
+    }
+    runList = "main"
+}
+
+tasks.register("deploy") {
+    doFirst {
+        liquibase {
+            activities.register("main") {
+                this.arguments = mapOf(
+                    "changelog-file" to "System.properties.liquibaseChangeLogFile",
+                    "contexts" to "System.properties.liquibaseContexts"
+                )
+            }
+        }
+    }
+}
+
+
+
+
+
+
 
