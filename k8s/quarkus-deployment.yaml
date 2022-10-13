@@ -13,11 +13,15 @@ spec:
       labels:
         app: quarkus-department
     spec:
+      initContainers:
+        - name: init-migration
+          image: gradle:jdk11-alpine
+          command: ['gradle', '-version']
       containers:
         - name: quarkus-department
-          image: quarkus/quarkus-department-system
+          image: quarkus/quarkus-kotlin-jvm
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 8089
+            - containerPort: 8088
               protocol: TCP
 

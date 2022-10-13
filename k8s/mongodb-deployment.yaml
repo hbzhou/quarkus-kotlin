@@ -1,26 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mysql
+  name: mongodb
   namespace: quarkus-department
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: mysql
+      app: mongodb
   template:
     metadata:
       labels:
-        app: mysql
+        app: mongodb
     spec:
       containers:
-        - name: mysql
-          image: mysql:5.6
+        - name: mongodb
+          image: mongo:latest
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 3306
+            - containerPort: 27017
               protocol: TCP
-          env:
-            - name: MYSQL_ROOT_PASSWORD
-              value: "123456"
       restartPolicy: Always

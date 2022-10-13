@@ -7,5 +7,5 @@ spec:
   selector:
     app: quarkus-department
   ports:
-    - port: 8089
+    - port: 8088
   type: NodePort
