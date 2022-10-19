@@ -24,6 +24,7 @@ dependencies {
     implementation("io.quarkus:quarkus-rest-client")
     implementation("io.quarkus:quarkus-rest-client-jackson")
     implementation("io.quarkus:quarkus-vertx")
+    implementation("org.jobrunr:quarkus-jobrunr:5.1.7")
     implementation(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
     implementation("io.quarkus:quarkus-hibernate-reactive-rest-data-panache")
     implementation("io.quarkus:quarkus-mongodb-rest-data-panache")

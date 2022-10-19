@@ -16,7 +16,7 @@ class ExtensionResource {
 
     @Inject
     @RestClient
-    private lateinit var extensionsService: ExtensionService
+    lateinit var extensionsService: ExtensionService
 
     @GET
     fun getById(@QueryParam(value = "id") id: String): Response {

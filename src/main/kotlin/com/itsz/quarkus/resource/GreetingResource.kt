@@ -17,7 +17,7 @@ class GreetingResource {
 
     @ConfigProperty(name = "quarkus.greetings")
     lateinit var greetings: String
-
+    
     @ConfigProperties(prefix = "bank.support")
     lateinit var bankSupportConfig: BankSupportConfig
 
@@ -28,7 +28,8 @@ class GreetingResource {
     @Path("/greetings")
     @Produces(MediaType.APPLICATION_JSON)
     fun greetings(): String {
-        return "Hello, $greetings"
+        val quarkus = ConfigProvider.getConfig().getConfigValue("quarkus.hello")
+        return "Hello, $greetings, $quarkus"
     }
 
 

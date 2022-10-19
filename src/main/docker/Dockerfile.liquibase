@@ -1,0 +1,8 @@
+FROM liquibase/liquibase
+ENV URL = mongodb://${MONGODB}:27017
+
+RUN cd ..
+
+ADD  changeLog.xml /liquibase/changelog/changeLog.xml
+
+CMD ["sh", "-c", "docker-entrypoint.sh --url=${URL} --classpath=/liquibase/changelog --changeLogFile=/liquibase/changelog/changelog.xml update"]
