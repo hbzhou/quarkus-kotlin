@@ -4,7 +4,7 @@ plugins {
     kotlin("plugin.jpa") version "1.3.72"
 
     id("io.quarkus")
-    id("org.jetbrains.kotlin.plugin.noarg") version "1.4.10"
+    id("org.jetbrains.kotlin.plugin.noarg") version "1.9.0"
     id("org.liquibase.gradle") version "2.0.4"
 
 }
@@ -81,7 +81,7 @@ liquibase {
     runList = "main"
 }
 
-tasks.register("deploy") {
+tasks.register("deployChangeLog") {
     doFirst {
         liquibase {
             activities.register("main") {
