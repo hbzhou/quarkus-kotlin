@@ -18,9 +18,9 @@ class VertxResource(val vertx: Vertx) {
     @Path("/download")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     fun download (): Uni<Response>{
-       return vertx.fileSystem().open("HKV04899081.mp4", OpenOptions().setRead(true))
+       return vertx.fileSystem().open("book.txt",OpenOptions().setRead(true))
             .onItem().transform {
-                Response.ok(it).header("content-disposition", "attachment; filename = demo.mp4").build()
+                Response.ok(it).header("content-disposition", "attachment; filename = war-and-peace.txt").build()
             }
     }
 }

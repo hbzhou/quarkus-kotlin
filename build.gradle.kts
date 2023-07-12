@@ -19,6 +19,10 @@ val quarkusPlatformArtifactId: String by project
 val quarkusPlatformVersion: String by project
 
 dependencies {
+    implementation(enforcedPlatform("${quarkusPlatformGroupId}:quarkus-amazon-services-bom:${quarkusPlatformVersion}"))
+    implementation("io.quarkiverse.amazonservices:quarkus-amazon-s3")
+    runtimeOnly("software.amazon.awssdk:netty-nio-client")
+    runtimeOnly("software.amazon.awssdk:apache-client")
     implementation("io.quarkus:quarkus-kubernetes")
     implementation("io.quarkus:quarkus-container-image-jib")
     implementation("io.quarkus:quarkus-rest-client")
