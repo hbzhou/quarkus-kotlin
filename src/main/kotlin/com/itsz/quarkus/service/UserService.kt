@@ -3,7 +3,6 @@ package com.itsz.quarkus.service
 import com.itsz.quarkus.model.User
 import com.itsz.quarkus.repository.UserRepository
 import io.smallrye.mutiny.Uni
-import io.smallrye.mutiny.coroutines.awaitSuspending
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVPrinter
 import org.bson.types.ObjectId
