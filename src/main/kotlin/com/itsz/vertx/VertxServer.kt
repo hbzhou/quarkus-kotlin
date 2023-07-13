@@ -11,6 +11,7 @@ class VertxServer {
             .connectHandler { socket ->
                 numberOfConnections ++
                 socket.handler {
+                    println("${Thread.currentThread().name}->receiving message from client: $it")
                     socket.write(it)
                 }
                 socket.closeHandler {
@@ -20,11 +21,11 @@ class VertxServer {
             .listen(3000)
             .subscribe()
             .with {
-                println("net server started at ${it.actualPort()}")
+                println("${Thread.currentThread().name} --> net server started at ${it.actualPort()}")
             }
 
         vertx.setPeriodic(5000) {
-            println("we now have $numberOfConnections connections")
+            println("${Thread.currentThread().name} --> we now have $numberOfConnections connections")
         }
 
         vertx.createHttpServer()
@@ -34,7 +35,7 @@ class VertxServer {
             .listen(8080)
             .subscribe()
             .with {
-                println("http server started at ${it.actualPort()}")
+                println("${Thread.currentThread().name} --> http server started at ${it.actualPort()}")
             }
 
     }

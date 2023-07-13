@@ -9,9 +9,12 @@ class VertxClient {
             .connect(3000, "localhost")
             .subscribe()
             .with { socket ->
-                socket.write("hello, server!!").replaceWithVoid()
                 socket.handler {
-                    socket.write(it)
+                    println("${Thread.currentThread().name} -->receiving message from server $it")
+                    socket.write("hello server")
+                }
+                socket.closeHandler {
+                    println("${Thread.currentThread().name} --> connection ended ...")
                 }
             }
     }
