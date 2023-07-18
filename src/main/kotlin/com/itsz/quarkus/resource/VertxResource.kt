@@ -37,7 +37,7 @@ class VertxResource(val vertx: Vertx) {
     fun readDirWithRawMutiny(): Uni<Response> {
         return vertx.fileSystem().readDir(SECURITIES_DIR)
             .map { convertToAsyncFileMulti(it) }
-            .flatMap{ it.parseFile()}
+            .flatMap { it.parseFile() }
             .onItem()
             .transform { Response.ok(it).build() }
     }
@@ -54,7 +54,7 @@ class VertxResource(val vertx: Vertx) {
     private fun readFiles(fileNames: MutableList<String>) = convertToAsyncFileMulti(fileNames).parseFile()
 
     private fun Multi<AsyncFile>.parseFile(): Uni<MutableList<String>> =
-        this.concatMap { RecordParser.newDelimited("\r\n", it).toMulti() }
+        concatMap { RecordParser.newDelimited("\r\n", it).toMulti() }
             .map { it.toString(StandardCharsets.UTF_8) }
             .collect().asList()
 
