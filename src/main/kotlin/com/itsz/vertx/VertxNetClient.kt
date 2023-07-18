@@ -11,7 +11,7 @@ fun main() {
             socket.writeAndForget("hello, from client ....")
             socket.handler {
                 println("${Thread.currentThread().name} -->receiving message from server $it")
-                socket.writeAndForget(it)
+//                socket.writeAndForget(it)
             }
             socket.closeHandler {
                 println("socket closed.....")
