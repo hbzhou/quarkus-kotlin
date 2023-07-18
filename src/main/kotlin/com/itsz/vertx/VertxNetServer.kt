@@ -3,15 +3,18 @@ package com.itsz.vertx
 import io.netty.handler.logging.ByteBufFormat
 import io.vertx.core.net.NetServerOptions
 import io.vertx.mutiny.core.Vertx
+import io.vertx.mutiny.core.buffer.Buffer
+import io.vertx.mutiny.core.parsetools.RecordParser
+import io.vertx.mutiny.core.streams.WriteStream
 
- private var numberOfConnections = 0
+private var numberOfConnections = 0
  fun main() {
     Vertx.vertx().createNetServer(NetServerOptions().setLogActivity(true).setActivityLogDataFormat(ByteBufFormat.HEX_DUMP))
         .connectHandler { socket ->
             numberOfConnections++
-            socket.handler {
-                println("${Thread.currentThread().name} --> receive data from client: $it")
-                socket.writeAndForget("hello, from server...")
+            println("new Connection with ID: ${socket.writeHandlerID()}")
+            RecordParser.newDelimited("\r\n", socket).handler {
+                println(it)
             }
             socket.closeHandler {
                 numberOfConnections--
